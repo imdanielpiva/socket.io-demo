@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Socket io</title>
+  <script type="text/javascript" src="./node_modules/socket.io-client/dist/socket.io.js"></script>
+</head>
+<body>
+  <div>
+    <h2>Qual é o seu nome?</h2>
+    <input type="text" id="input">
+    <button id="btn">Enviar</button>
+  </div>
+  <div class="flex">
+    <div class="sm-padding">
+      <h2>Número de usuários conectados:</h2>
+      <p id="usersCount" style="font-size: 4em; padding: 0; margin: 0;">0</p>
+    </div>
+    <div class="sm-padding">
+      <h2>Lista de nomes enviados:</h2>
+      <ol id="namesList"></ol>
+    </div>
+  </div>
+</body>
+
+<script type="text/javascript">
+  const socket = io('http://localhost:3000');
+  const namesList = document.getElementById('namesList');
+  const usersCount = document.getElementById('usersCount');
+  const input = document.getElementById('input');
+  const btn = document.getElementById('btn');
+
+  socket.once('connect', () => {});
+
+  socket.on('users connections changed', (count) => {
+    usersCount.textContent = count;
+  });
+
+  socket.on('new user name input', (name) => {
+    const item = document.createElement('li');
+
+    item.textContent = name;
+
+    namesList.appendChild(item);
+  });
+
+  btn.addEventListener('click', () => {
+    socket.emit('saveUser', input.value);
+  });
+</script>
+
+<style type="text/css">
+  .flex {
+    display: flex;
+  }
+
+  .sm-padding {
+    padding: 1em;
+  }
+</style>
+</html>
